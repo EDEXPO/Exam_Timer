@@ -1,132 +1,90 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login with Stopwatch</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f8ff;
-            text-align: center;
-            padding: 50px;
-        }
+  <style>
+    .vertical-center {
+      margin: 0;
+      position: absolute;
+      top: 50%;
+      -ms-transform: translateY(-50%);
+      transform: translateY(-50%);
+    }
 
-        .container {
-            width: 300px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-        }
+    .button {
+      border: none;
+      color: white;
+      position: absolute;
+      left: 50%;
+      top: 70%;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      cursor: pointer;
+      transform: translateX(-50%);
+      padding: 15px 30px;
+      background-color: #4CAF50;
+      border-radius: 5px;
+    }
 
-        h1 {
-            color: #333;
-            font-size: 24px;
-        }
+    body {
+      background-color: lightblue;
+    }
 
-        input[type="text"], input[type="password"] {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
+    h1 {
+      font-size: 250px;
+      color: white;
+      text-align: center;
+    }
 
-        button {
-            width: 100%;
-            padding: 10px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-        }
+    p {
+      font-family: verdana;
+      font-size: 20px;
+      text-align: center;
+    }
 
-        button:hover {
-            background-color: #45a049;
-        }
-
-        .stopwatch {
-            display: none;
-            margin-top: 30px;
-            font-size: 36px;
-        }
-
-        .stopwatch button {
-            margin-top: 20px;
-        }
-    </style>
+    .timer {
+      font-size: 40px;
+      color: white;
+      text-align: center;
+      margin-top: 50px;
+    }
+  </style>
 </head>
 <body>
 
-    <div class="container" id="login-container">
-        <h1>Login</h1>
-        <input type="text" id="username" placeholder="Username" required><br>
-        <input type="password" id="password" placeholder="Password" required><br>
-        <button onclick="login()">Login</button>
-    </div>
+  <h1>Exam Timer</h1>
+  <p>To help Students and Teachers.</p>
 
-    <div class="stopwatch" id="stopwatch-container">
-        <div id="time">00:00</div>
-        <button onclick="startStopwatch()">Start</button>
-        <button onclick="resetStopwatch()">Reset</button>
-    </div>
+  <div class="button">
+    <button class="button" onclick="startCountdown()">Start Test</button>
+  </div>
 
-    <script>
-        let loggedIn = false;
-        let stopwatchInterval;
-        let elapsedTime = 0; // in seconds
+  <div class="timer" id="timer">Time Remaining: 00:00</div>
 
-        // Function to handle login
-        function login() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
+  <script>
+    let countdown;
+    let timeRemaining = 10 * 60; // Set time in seconds (10 minutes)
+    
+    function startCountdown() {
+      document.body.style.backgroundColor = 'red'; // Change background color when button is clicked
 
-            // For demo purposes, any login will succeed
-            if (username && password) {
-                loggedIn = true;
-                document.getElementById('login-container').style.display = 'none';
-                document.getElementById('stopwatch-container').style.display = 'block';
-                elapsedTime = 0; // Reset stopwatch when logged in
-                updateTimeDisplay();
-            } else {
-                alert("Please enter both username and password.");
-            }
+      countdown = setInterval(function() {
+        let minutes = Math.floor(timeRemaining / 60);
+        let seconds = timeRemaining % 60;
+        if (seconds < 10) seconds = "0" + seconds;
+        document.getElementById('timer').innerText = `Time Remaining: ${minutes}:${seconds}`;
+
+        timeRemaining--;
+
+        if (timeRemaining < 0) {
+          clearInterval(countdown);
+          document.getElementById('timer').innerText = "Time's up!";
         }
-
-        // Function to start the stopwatch
-        function startStopwatch() {
-            if (!stopwatchInterval) {
-                stopwatchInterval = setInterval(function() {
-                    elapsedTime++;
-                    updateTimeDisplay();
-                }, 1000);
-            }
-        }
-
-        // Function to reset the stopwatch
-        function resetStopwatch() {
-            clearInterval(stopwatchInterval);
-            stopwatchInterval = null;
-            elapsedTime = 0;
-            updateTimeDisplay();
-        }
-
-        // Function to update the time display
-        function updateTimeDisplay() {
-            const minutes = Math.floor(elapsedTime / 60);
-            const seconds = elapsedTime % 60;
-            document.getElementById('time').textContent = `${pad(minutes)}:${pad(seconds)}`;
-        }
-
-        // Function to pad the time (e.g., 01, 02, ... 09)
-        function pad(number) {
-            return number < 10 ? '0' + number : number;
-        }
-    </script>
+      }, 1000);
+    }
+  </script>
 
 </body>
 </html>
